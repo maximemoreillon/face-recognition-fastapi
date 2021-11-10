@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, File, Form, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 
 from bson.json_util import dumps
 import json
 
 from controllers import users as user_controller
+from os import path
 
 router = APIRouter()
 
@@ -35,3 +36,11 @@ async def delete_user(user_id: str):
 async def update_user(user_id: str):
     result = user_controller.update_user()
     return result
+
+@router.get("/{user_id}/image")
+async def read_user(user_id: str):
+    user = user_controller.read_user(user_id)
+    image = user["image"]
+    image_path = path.join('uploads',image)
+    print(image_path)
+    return FileResponse(image_path)

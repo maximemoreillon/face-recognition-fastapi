@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from utils import load_image_from_request
+from utils import convert_image
 from routes import users as users_router
 from faceRecognition import recognize
 
@@ -30,7 +30,9 @@ app.include_router(users_router.router, prefix="/users")
 
 @app.post("/recognize")
 async def predict(image: UploadFile = File (...)):
-    img = await load_image_from_request(image)
+    img_data = await image.read()
+    img = convert_image(img_data)
+
     user = recognize(img)
     user_json = json.loads(dumps(user))
     return user_json

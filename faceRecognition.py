@@ -1,6 +1,7 @@
 import face_recognition
 import json
 from controllers.users import read_users
+from fastapi import HTTPException
 
 def recognize(img):
 
