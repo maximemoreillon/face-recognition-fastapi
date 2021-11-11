@@ -30,9 +30,13 @@ app.include_router(users_router.router, prefix="/users")
 
 @app.post("/recognize")
 async def predict(image: UploadFile = File (...)):
+
     img_data = await image.read()
     img = convert_image(img_data)
 
     user = recognize(img)
+
+    print(f'Recognized face of user ${user["name"]}')
+
     user_json = json.loads(dumps(user))
     return user_json
