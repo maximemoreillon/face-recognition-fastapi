@@ -23,6 +23,7 @@ async def root():
     return {
     "application_name": "Face recognition API",
     "author": "Maxime MOREILLON",
+    "version": "0.1.1",
     "mongodb": {"url": mongodb_url, "db": mongodb_db}
     }
 
