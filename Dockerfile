@@ -1,5 +1,6 @@
 FROM moreillon/face-recognition-base
 
+# Locale settings
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
