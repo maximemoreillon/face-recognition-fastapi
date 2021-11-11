@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from utils import convert_image
 from routes import users as users_router
 from faceRecognition import recognize
-
+from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
 
@@ -23,6 +23,7 @@ async def root():
     return {
     "application_name": "Face recognition API",
     "author": "Maxime MOREILLON",
+    "mongodb": {"url": mongodb_url, "db": mongodb_db}
     }
 
 
