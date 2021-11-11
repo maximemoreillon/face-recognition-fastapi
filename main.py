@@ -7,10 +7,14 @@ from faceRecognition import recognize
 from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
+import dlib.cuda as cuda
 
-version = "0.1.3"
+version = "0.1.4"
 
 print(f"= Face recognition FastAPI v{version} =")
+# Cuda check
+print(cuda.get_num_devices())
+
 
 app = FastAPI()
 
