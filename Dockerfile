@@ -1,5 +1,8 @@
 FROM moreillon/face-recognition-base
 
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 WORKDIR /usr/src/app
 
 COPY . .
