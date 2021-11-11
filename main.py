@@ -8,7 +8,7 @@ from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
 
-version = "0.1.2"
+version = "0.1.3"
 
 print(f"= Face recognition FastAPI v{version} =")
 
