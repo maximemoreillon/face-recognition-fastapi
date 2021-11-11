@@ -34,30 +34,30 @@ async def create_user(name, image):
     result = collection.insert_one(new_user_dict)
     user_id = str(result.inserted_id)
 
-    print(f'User {user_id} created')
+    print(f'[DB] User {user_id} created')
 
     return {
     "_id": user_id
     }
 
 def read_users():
-    print('Reading all users')
+    print('[DB] Reading all users')
     users_cursor = collection.find()
     user_list = list(users_cursor)
     return user_list
 
 def read_user(user_id):
-    print(f'Readign user {user_id}')
+    print(f'[DB] Reading user {user_id}')
     user = collection.find_one({"_id": ObjectId(user_id)})
     return user
 
 def read_user_image(user_id):
-    print(f'Reading image of user {user_id}')
+    print(f'[DB] Reading image of user {user_id}')
     user = collection.find_one({"_id": ObjectId(user_id)})
     return user
 
 def update_user(user_id):
-    print('update_user')
+    print('[DB] update_user')
     return 'Not implemented'
 
 

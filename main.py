@@ -8,6 +8,10 @@ from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
 
+version = "0.1.2"
+
+print(f"= Face recognition FastAPI v{version} =")
+
 app = FastAPI()
 
 app.add_middleware(
@@ -23,7 +27,7 @@ async def root():
     return {
     "application_name": "Face recognition API",
     "author": "Maxime MOREILLON",
-    "version": "0.1.1",
+    "version": version,
     "mongodb": {"url": mongodb_url, "db": mongodb_db}
     }
 
@@ -38,7 +42,7 @@ async def predict(image: UploadFile = File (...)):
 
     user = recognize(img)
 
-    print(f'Recognized face of user ${user["name"]}')
+    print(f'[FR] Recognized face of user {user["name"]}')
 
     user_json = json.loads(dumps(user))
     return user_json
