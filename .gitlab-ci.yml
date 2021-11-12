@@ -1,17 +1,31 @@
 stages:
-  - containerization
+  - containerization-aarch64
+  - containerization-x86
 
 variables:
   APPLICATION_NAME: face-recognition-fastapi
-  DOCKER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
+  CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
+  CONTAINER_IMAGE_X86: ${CONTAINER_IMAGE}:x86
+  CONTAINER_IMAGE_AARCH64: ${CONTAINER_IMAGE}:x86
 
-containerization:
-  stage: containerization
+containerization-aarch64:
+  stage: containerization-aarch64
   tags:
     - moreillon
     - aarch64
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
-    - docker build -t ${DOCKER_IMAGE} .
-    - docker push ${DOCKER_IMAGE}
-    - docker image rm ${DOCKER_IMAGE} || echo "Image is currently used"
+    - docker build -t ${CONTAINER_IMAGE_AARCH64} .
+    - docker push ${CONTAINER_IMAGE_AARCH64}
+    - docker image rm ${CONTAINER_IMAGE_AARCH64} || echo "Image is currently used"
+
+containerization-x86:
+  stage: containerization-x86
+  tags:
+    - moreillon
+    - aarch64
+  script:
+    - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
+    - docker build -t ${CONTAINER_IMAGE_X86} .
+    - docker push ${CONTAINER_IMAGE_X86}
+    - docker image rm ${CONTAINER_IMAGE_X86} || echo "Image is currently used"
