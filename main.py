@@ -9,11 +9,9 @@ from bson.json_util import dumps
 import json
 import dlib
 
-version = '0.1.5'
+version = '0.1.6'
 
 print(f'= Face recognition FastAPI v{version} =')
-# Cuda check
-print(f'CUDA check: {dlib.DLIB_USE_CUDA}, devices: {dlib.cuda.get_num_devices()}')
 
 app = FastAPI()
 
@@ -31,7 +29,8 @@ async def root():
     "application_name": "Face recognition API",
     "author": "Maxime MOREILLON",
     "version": version,
-    "mongodb": {"url": mongodb_url, "db": mongodb_db}
+    "mongodb": {"url": mongodb_url, "db": mongodb_db},
+    "cuda": {"used": dlib.DLIB_USE_CUDA, "num_devices": dlib.cuda.get_num_devices()}
     }
 
 
