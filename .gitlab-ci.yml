@@ -6,7 +6,7 @@ variables:
   APPLICATION_NAME: face-recognition-fastapi
   CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
   CONTAINER_IMAGE_X86: ${CONTAINER_IMAGE}:x86
-  CONTAINER_IMAGE_AARCH64: ${CONTAINER_IMAGE}:x86
+  CONTAINER_IMAGE_AARCH64: ${CONTAINER_IMAGE}:aarch64
 
 containerization-aarch64:
   stage: containerization-aarch64
