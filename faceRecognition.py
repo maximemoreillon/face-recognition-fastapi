@@ -5,10 +5,11 @@ from fastapi import HTTPException
 
 def recognize(img):
 
+    # Get users
     users = read_users()
 
+    # Get the encodings of the users
     # TODO: check if user has face encoding
-
     known_encodings = list(map((lambda x: x["face_encoding"]), users))
 
     try:

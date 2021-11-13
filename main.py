@@ -1,6 +1,6 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile,Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import FileResponse
 from utils import convert_image
 from routes import users as users_router
 from faceRecognition import recognize
@@ -8,8 +8,10 @@ from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
 import dlib
+from controllers import users as user_controller
+from os import path
 
-version = '0.1.6'
+version = '0.1.7'
 
 print(f'= Face recognition FastAPI v{version} =')
 
@@ -34,8 +36,6 @@ async def root():
     }
 
 
-app.include_router(users_router.router, prefix="/users")
-
 @app.post("/recognize")
 async def predict(image: UploadFile = File (...)):
 
@@ -48,3 +48,38 @@ async def predict(image: UploadFile = File (...)):
 
     user_json = json.loads(dumps(user))
     return user_json
+
+@app.get("/users")
+async def read_users():
+    users = user_controller.read_users()
+    # Not clean
+    return json.loads(dumps(users))
+
+@app.post("/users")
+async def create_user(image: UploadFile = File (...), name: str = Form(...)):
+    result = await user_controller.create_user(name, image)
+    return result
+
+@app.get("/users/{user_id}")
+async def read_user(user_id: str):
+    user = user_controller.read_user(user_id)
+    user_json = json.loads(dumps(user))
+    return user_json
+
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: str):
+    user_controller.delete_user(user_id)
+    return {"_id": user_id}
+
+@app.patch("/users/{user_id}")
+async def update_user(user_id: str):
+    result = user_controller.update_user()
+    return result
+
+@app.get("/users/{user_id}/image")
+async def read_user(user_id: str):
+    user = user_controller.read_user(user_id)
+    image = user["image"]
+    image_path = path.join('uploads',image)
+    print(image_path)
+    return FileResponse(image_path)
