@@ -2,20 +2,31 @@ from fastapi import FastAPI, File, UploadFile,Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from utils import convert_image
-from routes import users as users_router
 from faceRecognition import recognize
 from mongo import mongodb_url, mongodb_db
 from bson.json_util import dumps
 import json
 import dlib
 from controllers import users as user_controller
-from os import path
+from authMiddleware import AuthMiddleware
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 version = '0.1.7'
 
 print(f'= Face recognition FastAPI v{version} =')
 
 app = FastAPI()
+
+authentication_url = os.getenv('AUTHENTICATION_URL')
+if authentication_url:
+    print(f'Using ${authentication_url} for authentication')
+    app.add_middleware(
+        AuthMiddleware,
+        options={"url": authentication_url}
+    )
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,7 +43,8 @@ async def root():
     "author": "Maxime MOREILLON",
     "version": version,
     "mongodb": {"url": mongodb_url, "db": mongodb_db},
-    "cuda": {"used": dlib.DLIB_USE_CUDA, "num_devices": dlib.cuda.get_num_devices()}
+    "cuda": {"used": dlib.DLIB_USE_CUDA, "num_devices": dlib.cuda.get_num_devices()},
+    "auth" : authentication_url,
     }
 
 
@@ -63,13 +75,13 @@ async def create_user(image: UploadFile = File (...), name: str = Form(...)):
 @app.get("/users/{user_id}")
 async def read_user(user_id: str):
     user = user_controller.read_user(user_id)
-    user_json = json.loads(dumps(user))
-    return user_json
+    # Not clean
+    return json.loads(dumps(user))
 
 @app.delete("/users/{user_id}")
 async def delete_user(user_id: str):
-    user_controller.delete_user(user_id)
-    return {"_id": user_id}
+    result = user_controller.delete_user(user_id)
+    return result
 
 @app.patch("/users/{user_id}")
 async def update_user(user_id: str):
@@ -78,8 +90,5 @@ async def update_user(user_id: str):
 
 @app.get("/users/{user_id}/image")
 async def read_user(user_id: str):
-    user = user_controller.read_user(user_id)
-    image = user["image"]
-    image_path = path.join('uploads',image)
-    print(image_path)
+    image_path = user_controller.read_user_image(user_id)
     return FileResponse(image_path)

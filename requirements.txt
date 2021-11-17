@@ -4,3 +4,4 @@ aiofiles
 python-multipart
 opencv-python
 pymongo
+python-dotenv

@@ -3,6 +3,7 @@ from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 import face_recognition
 from utils import convert_image
+from os import path
 
 import cv2
 import numpy as np
@@ -53,8 +54,10 @@ def read_user(user_id):
 
 def read_user_image(user_id):
     print(f'[DB] Reading image of user {user_id}')
-    user = collection.find_one({"_id": ObjectId(user_id)})
-    return user
+    user = read_user(user_id)
+    image = user["image"]
+    image_path = path.join('uploads',image)
+    return image_path
 
 def update_user(user_id):
     print('[DB] update_user')
@@ -63,3 +66,4 @@ def update_user(user_id):
 
 def delete_user(user_id):
     collection.delete_one({"_id": ObjectId(user_id)})
+    return {"_id": user_id}
