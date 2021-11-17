@@ -14,7 +14,7 @@ import os
 
 load_dotenv()
 
-version = '0.1.7'
+version = '0.1.8'
 
 print(f'= Face recognition FastAPI v{version} =')
 
