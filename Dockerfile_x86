@@ -1,4 +1,4 @@
-FROM moreillon/face-recognition-base
+FROM python:3.9
 
 # Locale settings
 ENV LC_ALL=C.UTF-8
@@ -8,7 +8,11 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN pip3 install -r requirements.txt
+RUN apt-get update
+RUN apt-get install -y cmake
+
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements_x86.txt
 
 RUN mkdir uploads
 

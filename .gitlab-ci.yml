@@ -15,7 +15,7 @@ containerization-aarch64:
     - aarch64
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
-    - docker build -t ${CONTAINER_IMAGE_AARCH64} .
+    - docker build -f Dockerfile_x86 -t ${CONTAINER_IMAGE_AARCH64} .
     - docker push ${CONTAINER_IMAGE_AARCH64}
     - docker image rm ${CONTAINER_IMAGE_AARCH64} || echo "Image is currently used"
 
@@ -23,9 +23,9 @@ containerization-x86:
   stage: containerization-x86
   tags:
     - moreillon
-    - python
+    - x86
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
-    - docker build -t ${CONTAINER_IMAGE_X86} .
+    - docker build -f Dockerfile_aarch64 -t ${CONTAINER_IMAGE_X86} .
     - docker push ${CONTAINER_IMAGE_X86}
     - docker image rm ${CONTAINER_IMAGE_X86}
