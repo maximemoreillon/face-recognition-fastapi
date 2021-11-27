@@ -1,4 +1,4 @@
-face_recognition
+# No need for face_recognition as already installed in the base image
 fastapi
 uvicorn
 aiofiles

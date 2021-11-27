@@ -1,4 +1,4 @@
-FROM moreillon/face-recognition-base
+FROM moreillon/face-recognition-base:aarch64
 
 # Locale settings
 ENV LC_ALL=C.UTF-8
