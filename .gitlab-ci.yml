@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 variables:
   APPLICATION_NAME: face-recognition-fastapi
@@ -7,22 +8,34 @@ variables:
   CONTAINER_IMAGE_X86: ${CONTAINER_IMAGE}:x86
   CONTAINER_IMAGE_AARCH64: ${CONTAINER_IMAGE}:aarch64
 
-build-aarch64:
-  stage: build
-  tags:
-    - aarch64
-  script:
-    - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
-    - docker build -f Dockerfile_aarch64 -t ${CONTAINER_IMAGE_AARCH64} .
-    - docker push ${CONTAINER_IMAGE_AARCH64}
-    - docker image rm ${CONTAINER_IMAGE_AARCH64} || echo "Image is currently used"
+# build-aarch64:
+#   stage: build
+#   tags:
+#     - aarch64
+#   script:
+#     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
+#     - docker build -f Dockerfile_aarch64 -t ${CONTAINER_IMAGE_AARCH64} .
+#     - docker push ${CONTAINER_IMAGE_AARCH64}
+#     - docker image rm ${CONTAINER_IMAGE_AARCH64} || echo "Image is currently used"
 
 build-x86:
   stage: build
   tags:
-    - x86
+    - dind
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
     - docker build -f Dockerfile_x86 -t ${CONTAINER_IMAGE_X86} .
     - docker push ${CONTAINER_IMAGE_X86}
     - docker image rm ${CONTAINER_IMAGE_X86}
+
+deploy:
+  stage: deploy
+  tags:
+    - moreillon
+  script:
+    - envsubst < kubernetes_manifest.yml | kubectl apply -f -
+    - kubectl rollout restart deployment/${APPLICATION_NAME}
+  environment:
+    name: production
+    kubernetes:
+      namespace: ${KUBERNETES_NAMESPACE}
