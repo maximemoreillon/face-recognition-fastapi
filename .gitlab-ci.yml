@@ -22,7 +22,7 @@ services:
 #     - docker push ${CONTAINER_IMAGE_AARCH64}
 #     - docker image rm ${CONTAINER_IMAGE_AARCH64} || echo "Image is currently used"
 
-build-x86:
+build:
   stage: build
   tags:
     - dind
