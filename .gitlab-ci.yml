@@ -8,6 +8,10 @@ variables:
   CONTAINER_IMAGE_X86: ${CONTAINER_IMAGE}:x86
   CONTAINER_IMAGE_AARCH64: ${CONTAINER_IMAGE}:aarch64
 
+image: moreillon/ci-dind
+services:
+  - name: docker:19.03.12-dind
+
 # build-aarch64:
 #   stage: build
 #   tags:
@@ -31,7 +35,7 @@ build-x86:
 deploy:
   stage: deploy
   tags:
-    - moreillon
+    - dind
   script:
     - envsubst < kubernetes_manifest.yml | kubectl apply -f -
     - kubectl rollout restart deployment/${APPLICATION_NAME}
