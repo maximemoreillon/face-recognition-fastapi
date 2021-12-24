@@ -52,4 +52,4 @@ spec:
     app: ${APPLICATION_NAME}
   ports:
   - port: 80
-    nodePort: 30020
+    nodePort: 30021
