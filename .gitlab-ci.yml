@@ -1,6 +1,6 @@
 stages:
   - build
-  - deploy
+  # - deploy
 
 variables:
   APPLICATION_NAME: face-recognition-fastapi
@@ -32,14 +32,14 @@ build:
     - docker push ${CONTAINER_IMAGE_X86}
     - docker image rm ${CONTAINER_IMAGE_X86}
 
-deploy:
-  stage: deploy
-  tags:
-    - dind
-  script:
-    - envsubst < kubernetes_manifest.yml | kubectl apply -f -
-    - kubectl rollout restart deployment/${APPLICATION_NAME}
-  environment:
-    name: production
-    kubernetes:
-      namespace: ${KUBERNETES_NAMESPACE}
+# deploy:
+#   stage: deploy
+#   tags:
+#     - dind
+#   script:
+#     - envsubst < kubernetes_manifest.yml | kubectl apply -f -
+#     - kubectl rollout restart deployment/${APPLICATION_NAME}
+#   environment:
+#     name: production
+#     kubernetes:
+#       namespace: ${KUBERNETES_NAMESPACE}
